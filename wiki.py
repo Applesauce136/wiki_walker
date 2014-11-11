@@ -1,2 +1,2 @@
-def add():
-    pass
+def add(title):
+    print title
