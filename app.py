@@ -11,13 +11,13 @@ def home(methods = ["GET"]):
     if 'prev' in session:
         session.pop('prev')
     if not 'hist' in session:
-        session['hist'] = {}
+        session['hist'] = {} #init session history
     if request.args.get("submit") == "Submit Query":
         return redirect(url_for("page", title=request.args.get("search")))
     return render_template("home.html")
 
-@app.route("/tree/<node>")
-def tree(node=""):
+@app.route("/tree")
+def tree():
     return str(session['hist'])
 
 @app.route("/page/<title>")
