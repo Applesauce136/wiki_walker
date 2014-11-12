@@ -57,14 +57,14 @@ def wiki(title="Main_Page"):
     stuff = json.loads(urlfile.read())
     textstuff= json.loads(textfile.read())
 
-    '''
+    nav = "<br>"
     for outer in stuff["query"]["pages"]:
-        page += "Links from %s:<br>\n" % stuff["query"]["pages"][outer]["title"]
+        nav += "Links from %s:<br>\n" % stuff["query"]["pages"][outer]["title"]
         for inner in stuff["query"]["pages"][outer]["links"]:
-            page += "<a href=%s>%s</a><br>\n" % (url_for("page", title=inner["title"].replace(" ", "_")), inner["title"])
-    '''
+            nav += "<a href=%s>%s</a><br>\n" % (url_for("wiki", title=inner["title"].replace(" ", "_")), inner["title"])
+
     page = textstuff["parse"]["text"]["*"]
-    return render_template("wiki.html", title=title, page=page)
+    return render_template("wiki.html", title=title, page=page, nav=nav)
 
 @app.route("/clear", methods=["GET"])
 def clear():
