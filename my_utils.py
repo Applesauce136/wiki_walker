@@ -12,4 +12,3 @@ def add(hist, prev, title):
         hist[title] = ( [], [] )
     hist[title][0].append(prev)
     hist[prev][1].append(title)
-
