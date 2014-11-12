@@ -1,0 +1,45 @@
+<!doctype html>
+
+<head>
+  <link rel=stylesheet type=text/css href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+  <title>
+    WikiWalk: {% block title %}{% endblock %}
+  </title>
+</head>
+
+<body>
+  <div class="container">
+    <div>
+      <center>
+	<h1>
+	  Welcome to the WikiWalk
+	</h1>
+      </center>
+    </div>
+    
+    <hr>
+    
+    <div class="col-md-2">
+      <h3>
+	Navigation
+      </h3>
+      <br>
+      <a href="/">Home</a>
+      <br>
+      <a href="/tree">Visited Pages</a>
+      <br>
+      <a href="/clear">Clear History</a>
+      <br>
+      {% block nav %}
+      {% endblock  nav %}
+    </div>
+    <div class="col-md-10">
+      {% block body %}
+      {% endblock %}
+    </div>
+    
+  </div>
+</body>

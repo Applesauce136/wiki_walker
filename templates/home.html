@@ -1,7 +1,15 @@
-Give me a term to look for
-<br>
+{% extends "base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block body %}
+<h3>
+  Find a Page
+</h3>
 <form method="GET">
   <input type="text" name="search" placeholder="search">
   <input type="submit" name="submit" value="submit">
 </form>
-
+{% endblock %}

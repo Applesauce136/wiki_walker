@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+History
+{% endblock %}
+
+{% block body %}
+<h3>
+  Pages Visited
+</h3>
+<br>
+{% if not thing %}
+Nothing to see here
+<br>
+You've not visited any pages.
+{% else %}
+{% set p = 0 %}
+
+{% for page in thing %}
+{% set p = p + 1 %}
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headin{{ p }}">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ p }}" aria-expanded="true" aria-controls="collapse{{ p }}">
+	  {{ page|replace("_"," ") }}
+        </a>
+      </h4>
+    </div>
+    <div id="collapse{{ p }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ p }}">
+      <div class="panel-body">
+	<h4>
+	  <a href="/wiki/{{ page }}">{{ page|replace("_"," ") }}</a>
+	</h4>
+	{% if thing[page][0] %}
+	<hr>
+	Arrived here from
+	<br>
+	{% for from in thing[page][0] %}
+	<a href="/wiki/{{ from }}">{{ from|replace("_"," ") }}</a>
+	{% endfor %}
+	{% endif %}
+	{% if thing[page][1] %}
+	<hr>
+	From here, went to
+	<br>
+	{% for to in thing[page][1] %}
+	<a href="/wiki/{{ to }}">{{ to|replace("_"," ") }}</a>
+	{% endfor %}
+	{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<br>
+{% endblock %}

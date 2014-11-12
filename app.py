@@ -18,20 +18,25 @@ def home(methods = ["GET"]):
 
 @app.route("/tree")
 def tree():
-    s = str(session['hist']) + "<hr>"
+    if 'prev' in session:
+        session.pop('prev')
+    s = str(session['hist']) + "\n"
     for thing in session['hist']:
-        s+= thing + "<br>"
+        s+= thing + "\n"
         for item in session['hist'][thing][0]:
-            s+= "	from: " + item + "<br>"
+            s+= "	from: " + item + "\n"
         for item in session['hist'][thing][1]:
-            s+= "	to: " + item + "<br>"
-        s += "<br>"
-    return s
+            s+= "	to: " + item + "\n"
+        s += "\n"
+    print s
+    return render_template("tree.html", thing=session['hist'])
 
 @app.route("/wiki/")
 @app.route("/wiki/<title>")
 def page(title="Main_Page"):
     title = title.replace(" ", "_")
+    if not 'hist' in session:
+        session['hist'] = {}
     if 'prev' in session:
         my_utils.add(session['hist'], session['prev'], title)
     session['prev'] = title
@@ -67,7 +72,14 @@ def page(title="Main_Page"):
     page+= "<hr>"
     page+= text + "<hr>"
     page += textstuff["parse"]["text"]["*"]
-    return page
+    return render_template("wiki.html", title=title)
 
+@app.route("/clear", methods=["GET"])
+def clear():
+    if request.args.get("submit") == "Yes":
+        session.pop('hist')
+        return redirect(url_for("home"))
+    return render_template("clear.html")
+    
 if __name__ == "__main__":
     app.run(debug=True)
