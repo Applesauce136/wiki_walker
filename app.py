@@ -11,9 +11,9 @@ def home(methods = ["GET"]):
     if 'prev' in session:
         session.pop('prev')
     if not 'hist' in session:
-        session['hist'] = {} #init session history
+        session['hist'] = {}
     if request.args.get("submit") == "submit":
-        return redirect(url_for("page", title=request.args.get("search")))
+        return redirect(url_for("wiki", title=request.args.get("search")))
     return render_template("home.html")
 
 @app.route("/tree")
@@ -30,20 +30,24 @@ def tree():
 
 @app.route("/wiki/")
 @app.route("/wiki/<title>")
-def page(title="Main_Page"):
+def wiki(title="Main_Page"):
     title = title.replace(" ", "_")
+
     if 'prev' in session:
         my_utils.add(session['hist'], session['prev'], title)
     session['prev'] = title
+
     page = '<a href="%s"><input type=submit value="Go Home"></a><br>' % url_for("home")
 
     text = my_utils.api_req(other={
-        "format":"json",
-        "prop":"text",
         "action":"parse",
-        "page":title
+        "format":"json",
+        "page":title,
+        "prop":"text",
+        "redirects":"",
     })
     url = my_utils.api_req(other = {
+        "action":"query",
         "format":"json",
         "titles":title,
         "prop":"links", 
@@ -52,7 +56,11 @@ def page(title="Main_Page"):
     })
 
     #"http://en.wikipedia.org/w/api.php?action=query&format=json&titles=%s&prop=links&pllimit=max&redirects" % title
-    urlfile = urllib2.urlopen(url)
+    try:
+        urlfile = urllib2.urlopen(url)
+    except UnicodeEncodeError:
+        return "Placeholder error message<hr>Our website doesn't like URL's with UTF-8 only characters (aka IRI's) yet.  If possible, maybe you could manually edit the URL you're requesting to be ASCII-compliant?"
+
     textfile= urllib2.urlopen(text)
 
     stuff = json.loads(urlfile.read())
@@ -64,8 +72,8 @@ def page(title="Main_Page"):
         for inner in stuff["query"]["pages"][outer]["links"]:
             page += "<a href=%s>%s</a><br>\n" % (url_for("page", title=inner["title"].replace(" ", "_")), inner["title"])
     '''
-    page+= "<hr>"
-    page+= text + "<hr>"
+    page += "<hr>"
+    page += text + "<hr>"
     page += textstuff["parse"]["text"]["*"]
     return page
 
