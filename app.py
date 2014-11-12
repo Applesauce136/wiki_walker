@@ -8,11 +8,10 @@ app.secret_key = "asdf"
 
 @app.route("/")
 def home(methods = ["GET"]):
-    if 'prev' in session:
-        session.pop('prev')
     if not 'hist' in session:
         session['hist'] = {}
     if request.args.get("submit") == "submit":
+        my_utils.add(hist, "Searched for", request.args.get("search"))
         return redirect(url_for("wiki", title=request.args.get("search")))
     return render_template("home.html")
 
