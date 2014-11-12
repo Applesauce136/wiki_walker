@@ -10,5 +10,7 @@ def add(hist, prev, title):
         #init; read (camefrom, wentto)
     if not title in hist:
         hist[title] = ( [], [] )
-    hist[title][0].append(prev)
-    hist[prev][1].append(title)
+    if not prev in hist[title][0]:
+        hist[title][0].append(prev)
+    if not title in hist[prev][0]:
+        hist[prev][1].append(title)
