@@ -20,15 +20,6 @@ def home(methods = ["GET"]):
 def tree():
     if 'prev' in session:
         session.pop('prev')
-    s = str(session['hist']) + "\n"
-    for thing in session['hist']:
-        s+= thing + "\n"
-        for item in session['hist'][thing][0]:
-            s+= "	from: " + item + "\n"
-        for item in session['hist'][thing][1]:
-            s+= "	to: " + item + "\n"
-        s += "\n"
-    print s
     return render_template("tree.html", thing=session['hist'])
 
 @app.route("/wiki/")
@@ -40,8 +31,6 @@ def wiki(title="Main_Page"):
     if 'prev' in session:
         my_utils.add(session['hist'], session['prev'], title)
     session['prev'] = title
-
-    page = '<a href="%s"><input type=submit value="Go Home"></a><br>' % url_for("home")
 
     text = my_utils.api_req(other={
         "action":"parse",
@@ -59,7 +48,6 @@ def wiki(title="Main_Page"):
         "redirects":"",
     })
 
-    #"http://en.wikipedia.org/w/api.php?action=query&format=json&titles=%s&prop=links&pllimit=max&redirects" % title
     try:
         urlfile = urllib2.urlopen(url)
     except UnicodeEncodeError:
@@ -76,15 +64,13 @@ def wiki(title="Main_Page"):
         for inner in stuff["query"]["pages"][outer]["links"]:
             page += "<a href=%s>%s</a><br>\n" % (url_for("page", title=inner["title"].replace(" ", "_")), inner["title"])
     '''
-    page += "<hr>"
-    page += text + "<hr>"
-    page += textstuff["parse"]["text"]["*"]
-    return render_template("wiki.html", title=title)
+    page = textstuff["parse"]["text"]["*"]
+    return render_template("wiki.html", title=title, page=page)
 
 @app.route("/clear", methods=["GET"])
 def clear():
     if request.args.get("submit") == "Yes":
-        session.pop('hist')
+        session['hist'] = {}
         return redirect(url_for("home"))
     return render_template("clear.html")
     
