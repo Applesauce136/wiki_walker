@@ -30,7 +30,12 @@ You've not visited any pages.
     <div id="collapse{{ p }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ p }}">
       <div class="panel-body">
 	<h4>
+	  {% if page != "Home" %}
+	  {#see app.home(); that is where Searched for appears#}
 	  <a href="/wiki/{{ page }}">{{ page|replace("_"," ") }}</a>
+	  {% else %}
+	  <a href="/">Home</a>
+	  {% endif %}
 	</h4>
 	{% if thing[page][0] %}
 	<hr>

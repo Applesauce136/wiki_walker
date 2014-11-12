@@ -11,7 +11,7 @@ def home(methods = ["GET"]):
     if not 'hist' in session:
         session['hist'] = {}
     if request.args.get("submit") == "submit":
-        my_utils.add(hist, "Searched for", request.args.get("search"))
+        my_utils.add(session['hist'], "Home", request.args.get("search"))
         return redirect(url_for("wiki", title=request.args.get("search")))
     return render_template("home.html")
 
